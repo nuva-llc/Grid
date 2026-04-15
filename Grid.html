@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Grid Dashboard Layout</title>
+    <meta name="description" content="Standalone Grid Dashboard Layout — 6 regions, container-query responsive." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* ─────────────────────────────────────────────
+   11 · Grid Dashboard Layout — Standalone Skeleton (full screen)
+───────────────────────────────────────────────── */
+
+:root {
+    --bg:         #F4F6FB;
+    --surface:    #FFFFFF;
+    --text:       #1A1A2E;
+    --text-muted: #7E7E9A;
+    --border:     #E8E6F0;
+
+    --c-header:  #D97706;
+    --c-sidebar: #7C3AED;
+    --c-main:    #059669;
+    --c-widget:  #DB2777;
+    --c-stats:   #0891B2;
+    --c-footer:  #E11D48;
+
+    --sh-mix:    26%;
+    --sh-dim:    12%;
+    --sh-border: 45%;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* ══════════════════════════════════════
+   LAYOUT (fills viewport)
+   ══════════════════════════════════════ */
+.layout-wrap {
+    width: 100vw;
+    height: 100vh;
+    padding: 1.25rem;
+    container-type: inline-size;
+    container-name: dash;
+}
+
+.layout {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    gap: 0.75rem;
+
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr auto auto auto;
+    grid-template-areas:
+        'header'
+        'sidebar'
+        'main'
+        'widget'
+        'statistics'
+        'footer';
+}
+
+@container dash (min-width: 40rem) {
+    .layout {
+        grid-template-columns: 10rem 1fr;
+        grid-template-rows: auto 1fr auto auto;
+        grid-template-areas:
+            'header   header'
+            'sidebar  main'
+            'sidebar  widget'
+            'sidebar  statistics'
+            'footer   footer';
+    }
+}
+
+@container dash (min-width: 60rem) {
+    .layout {
+        grid-template-columns: 14rem 1fr 1fr;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas:
+            'header   header   header'
+            'sidebar  main     main'
+            'sidebar  widget   statistics'
+            'footer   footer   footer';
+    }
+}
+
+.region { min-height: 0; min-width: 0; }
+
+/* ══════════════════════════════════════
+   REGIONS
+   ══════════════════════════════════════ */
+.region {
+    --hue: var(--c-main);
+    position: relative;
+    background:
+        linear-gradient(180deg,
+            color-mix(in srgb, var(--hue) 6%, var(--surface)) 0%,
+            var(--surface) 100%);
+    border: 1px dashed color-mix(in srgb, var(--hue) var(--sh-border), transparent);
+    border-radius: 0.8rem;
+    padding: 1.6rem 0.9rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.region__tag {
+    position: absolute;
+    top: -0.6rem;
+    left: 0.9rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: #fff;
+    background: var(--hue);
+    padding: 0.28rem 0.65rem;
+    border-radius: 999px;
+    box-shadow: 0 2px 10px color-mix(in srgb, var(--hue) 35%, transparent);
+    line-height: 1;
+}
+
+.region--header    { grid-area: header;     --hue: var(--c-header);  flex-direction: row; align-items: center; gap: 0.6rem; padding: 1.2rem 1rem 0.7rem; }
+.region--sidebar   { grid-area: sidebar;    --hue: var(--c-sidebar); }
+.region--main      { grid-area: main;       --hue: var(--c-main); }
+.region--widget    { grid-area: widget;     --hue: var(--c-widget); }
+.region--statistics{ grid-area: statistics; --hue: var(--c-stats); }
+.region--footer    { grid-area: footer;     --hue: var(--c-footer);  flex-direction: row; align-items: center; gap: 0.6rem; padding: 1.2rem 1rem 0.7rem; }
+
+.region--sidebar .sk--block { margin-top: auto; }
+
+/* ══════════════════════════════════════
+   SKELETON PRIMITIVES
+   ══════════════════════════════════════ */
+.sk {
+    display: block;
+    background: color-mix(in srgb, var(--hue) var(--sh-mix), transparent);
+    border-radius: 999px;
+}
+.sk--dim { background: color-mix(in srgb, var(--hue) var(--sh-dim), transparent); }
+
+.sk--bar    { height: 0.7rem; width: 5rem; border-radius: 4px; }
+.sk--w-40   { width: 40%; }
+.sk--w-50   { width: 50%; }
+.sk--w-60   { width: 60%; }
+.sk--grow   { flex: 1; }
+
+.sk--dot    { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--hue); flex-shrink: 0; }
+.sk--dot-lg { width: 1.25rem; height: 1.25rem; border-radius: 50%; background: color-mix(in srgb, var(--hue) var(--sh-mix), transparent); flex-shrink: 0; }
+.sk--sq     { width: 0.85rem; height: 0.85rem; border-radius: 4px; flex-shrink: 0; }
+.sk--pill   { width: 3.2rem; height: 1.1rem; border-radius: 999px; }
+
+.sk--search {
+    flex: 1;
+    height: 1.3rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--hue) 10%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--hue) var(--sh-border), transparent);
+}
+
+.sk--spacer { flex: 1; background: transparent; }
+
+.sk--block {
+    height: 2.2rem;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--hue) 14%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--hue) var(--sh-border), transparent);
+}
+
+.sk--card {
+    height: 3rem;
+    border-radius: 0.45rem;
+    background: color-mix(in srgb, var(--hue) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--hue) 28%, transparent);
+}
+
+.sk--progress {
+    height: 0.55rem;
+    width: 100%;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--hue) 10%, transparent);
+    overflow: hidden;
+}
+.sk--progress > i {
+    display: block;
+    height: 100%;
+    background: var(--hue);
+    border-radius: 999px;
+}
+
+.sk--chart {
+    flex: 1;
+    min-height: 4rem;
+    border-radius: 0.5rem;
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--hue) 18%, transparent), transparent 80%),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0,
+            transparent 0.9rem,
+            color-mix(in srgb, var(--hue) 14%, transparent) 0.9rem,
+            color-mix(in srgb, var(--hue) 14%, transparent) calc(0.9rem + 1px)
+        );
+    border: 1px solid color-mix(in srgb, var(--hue) 28%, transparent);
+}
+
+.sk-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+.sk-row--between { justify-content: space-between; }
+
+.sk-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    width: 100%;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="layout-wrap">
+        <div class="layout" aria-label="Dashboard wireframe">
+            <div class="region region--header">
+                <span class="region__tag">HEADER</span>
+                <span class="sk sk--dot-lg"></span>
+                <span class="sk sk--bar sk--w-40"></span>
+                <span class="sk sk--search"></span>
+                <span class="sk sk--dot-lg"></span>
+            </div>
+
+            <div class="region region--sidebar">
+                <span class="region__tag">SIDEBAR</span>
+                <span class="sk-row"><span class="sk sk--sq"></span><span class="sk sk--bar sk--grow"></span></span>
+                <span class="sk-row"><span class="sk sk--sq"></span><span class="sk sk--bar sk--grow sk--dim"></span></span>
+                <span class="sk-row"><span class="sk sk--sq"></span><span class="sk sk--bar sk--grow sk--dim"></span></span>
+                <span class="sk-row"><span class="sk sk--sq"></span><span class="sk sk--bar sk--grow sk--dim"></span></span>
+                <span class="sk sk--block"></span>
+            </div>
+
+            <div class="region region--main">
+                <span class="region__tag">MAIN</span>
+                <span class="sk-row sk-row--between">
+                    <span class="sk sk--bar sk--w-60"></span>
+                    <span class="sk sk--pill"></span>
+                </span>
+                <span class="sk-grid-4">
+                    <span class="sk sk--card"></span>
+                    <span class="sk sk--card"></span>
+                    <span class="sk sk--card"></span>
+                    <span class="sk sk--card"></span>
+                </span>
+                <span class="sk sk--chart"></span>
+            </div>
+
+            <div class="region region--widget">
+                <span class="region__tag">WIDGET</span>
+                <span class="sk sk--bar sk--w-40"></span>
+                <span class="sk sk--progress"><i style="width:72%"></i></span>
+                <span class="sk sk--progress"><i style="width:41%"></i></span>
+                <span class="sk sk--progress"><i style="width:88%"></i></span>
+            </div>
+
+            <div class="region region--statistics">
+                <span class="region__tag">STATISTICS</span>
+                <span class="sk sk--bar sk--w-40"></span>
+                <span class="sk sk--progress"><i style="width:58%"></i></span>
+                <span class="sk sk--progress"><i style="width:27%"></i></span>
+                <span class="sk sk--progress"><i style="width:11%"></i></span>
+            </div>
+
+            <div class="region region--footer">
+                <span class="region__tag">FOOTER</span>
+                <span class="sk sk--dot"></span>
+                <span class="sk sk--bar sk--w-40"></span>
+                <span class="sk sk--spacer"></span>
+                <span class="sk sk--bar sk--w-50 sk--dim"></span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
